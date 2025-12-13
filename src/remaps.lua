@@ -35,22 +35,29 @@ map("i", "<CR>", function()
     end
 end, { noremap = true, expr = true })
 
+-- navigate tabs
 map("n", "<C-left>", ":tabprevious<CR>",    { noremap = true, silent = true })
 map("n", "<C-right>", ":tabnext<CR>",       { noremap = true, silent = true })
+-- create and close tabs
 map("n", "<C-up>", ":tabedit<CR>",          { noremap = true, silent = true })
 map("n", "<C-down>", ":tabclose<CR>",       { noremap = true, silent = true })
+-- move tabs around
 map("n", "<S-left>", ":tabmove-1<CR>",      { noremap = true, silent = true })
 map("n", "<S-right>", ":tabmove+1<CR>",     { noremap = true, silent = true })
 
 map("n", "<Leader>w", "<C-w>",              { noremap = true })
-map("n", "<Space><Space>", "i<Space><ESC>", { noremap = true })
+-- move lines around
 map("n", "<C-j>", ":m+1<CR>",               { noremap = true, silent = true })
 map("n", "<C-k>", ":m-2<CR>",               { noremap = true, silent = true })
+-- change vertical window size
 map("n", "<C-h>", ":vertical resize-2<CR>", { noremap = true, silent = true })
 map("n", "<C-l>", ":vertical resize+2<CR>", { noremap = true, silent = true })
+-- auto comment in lua
 map("n", "<C-->", "0i--<ESC>",              { noremap = true })
+-- adjust indentation of a line using < or >
 map("n", "<", "<<",                         { noremap = true })
 map("n", ">", ">>",                         { noremap = true })
+-- if the line is empty then remap i to S
 map("n", "i", function()
     local currentLine = vim.fn.getline('.')
     if currentLine == "" then
@@ -60,9 +67,6 @@ map("n", "i", function()
     end
 end, { noremap = true, expr = true })
 
+-- <leader>h in visual mode to search for help of the highlighted area and <leader>/ to search the file
 map("v", "<Leader>h", "y:<C-u>help <C-r>0<CR>", { noremap = true })
 map("v", "<Leader>/", "y/<C-r>0<CR>",           { noremap = true })
-
-if vim.api.nvim_buf_get_option(0, "filetype") == "lua" then
---    map("i", "{}<CR>", "<CR><CR>end<ESC>kS", { noremap = true })
-end

@@ -1,3 +1,4 @@
+i made this readme with chatgpt btw
 # nodtvim
 
 A lightweight, opinionated **Neovim configuration** focused on speed, clarity, and built‑in functionality — with minimal external dependencies.

@@ -50,7 +50,7 @@ nodtvim also includes its own tabline for managing buffers and tabs in a clean, 
 mv ~/.config/nvim ~/.config/nvim.bak
 
 # Clone nodtvim
-git clone https://github.com/yourusername/nodtvim ~/.config/nvim
+git clone https://github.com/foxerlot/nodtvim ~/.config/nvim
 ```
 
 Then start Neovim:

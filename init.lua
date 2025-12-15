@@ -1,5 +1,3 @@
-package.path = package.path .. ";" .. vim.fn.expand("~/") .. ".config/nvim/?.lua;" .. vim.fn.expand("~/") .. ".config/nvim/src/?.lua"
-
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.g.mapleader = " "
@@ -33,10 +31,10 @@ vim.opt.fillchars    = { eob = " " }
 vim.opt.termguicolors = true
 vim.cmd("syntax on")
 
-require('src.status')
-require('src.remaps')
-require('src.autocmd')
+require('status')
+require('remaps')
+require('autocmd')
 vim.keymap.set("n", "<Leader>e", function()
-    require('src.files'):open(37)
+    require('files'):open(37)
 end, { noremap = true })
 

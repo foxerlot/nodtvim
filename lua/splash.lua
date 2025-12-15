@@ -1,8 +1,8 @@
 local M = {}
 local map = vim.keymap.set
-local lines = vim.fn.readfile("~/.config/nvim/lua/splash.txt")
-local oldfiles = vim.v.oldfiles
 local home = vim.fn.expand("~")
+local lines = vim.fn.readfile(home .. "/.config/nvim/lua/splash.txt")
+local oldfiles = vim.v.oldfiles
 
 function M:setScreen()
     local last5 = {}

@@ -4,7 +4,7 @@ A lightweight neovim configuration that includes tabline, statusline, file explo
 NodtVim ships with no external plugins making it easy to set up.
 all extensions in NodtVim are written entirely in lua
 
-### installation
+### 📦 installation
 
 Just set your init.lua file to the NodtVim init.lua file and then add the lua directory to your neovim config directory.
 Your neovim config directory should look something like this:

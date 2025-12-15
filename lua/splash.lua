@@ -1,6 +1,6 @@
 local M = {}
 local map = vim.keymap.set
-local lines = vim.fn.readfile("splash.txt")
+local lines = vim.fn.readfile("~/.config/nvim/lua/splash.txt")
 local oldfiles = vim.v.oldfiles
 local home = vim.fn.expand("~")
 

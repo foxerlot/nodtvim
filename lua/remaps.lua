@@ -1,72 +1,63 @@
 local map = vim.keymap.set
 
--- bracket autocomplete
-map("i", "(", "()<Left>", { noremap = true, silent = true }) -- parenthesis
-map("i", "{", "{}<Left>", { noremap = true, silent = true }) -- brace   / curly bracket
-map("i", "[", "[]<Left>", { noremap = true, silent = true }) -- bracket / square bracket
-map("i", ")", function()
-    if vim.api.nvim_get_current_line():sub(vim.fn.col('.'), vim.fn.col('.')) == ')' then
+map('i', "{", "{}<Left>", { noremap = true, silent = true }) -- brace   / curly bracket
+map('i', "}", function()
+    if vim.api.nvim_get_current_line():sub(vim.fn.col('.'), vim.fn.col('.')) == '}' then
         return "<Right>"
     else
-        return ")"
-    end
-end, { noremap = true, expr = true, silent = true })
-map("i", "}", function()
-    if vim.api.nvim_get_current_line():sub(vim.fn.col('.'), vim.fn.col('.')) == '}' then
-        return "<Right>" else
         return "}"
     end
 end, { noremap = true, expr = true, silent = true })
-map("i", "]", function()
-    if vim.api.nvim_get_current_line():sub(vim.fn.col('.'), vim.fn.col('.')) == ']' then
-        return "<Right>"
-    else
-        return "]"
-    end
-end, { noremap = true, expr = true, silent = true })
-
-map("i", "<CR>", function()
+map('i', "<CR>", function()
     local char_under_cursor = vim.fn.getline('.'):sub(vim.fn.col('.'), vim.fn.col('.'))
     if char_under_cursor == "}" then
-        vim.api.nvim_feedkeys("\n\n\27ki\t", "n", false)
-        return ""
+        return "\n\n\27kS"
     else
         return "\n"
     end
 end, { noremap = true, expr = true })
+map('i', "<C-Space>", "<C-x><C-o>", { noremap = true })
+map('i', "<C-h>", "<Left>", { noremap = true })
+map('i', "<C-j>", "<C-n>", { noremap = true })
+map('i', "<C-k>", "<C-p>", { noremap = true })
+map('i', "<C-l>", "<Right>", { noremap = true })
 
--- navigate tabs
-map("n", "<C-left>", ":tabprevious<CR>",    { noremap = true, silent = true })
-map("n", "<C-right>", ":tabnext<CR>",       { noremap = true, silent = true })
--- create and close tabs
-map("n", "<C-up>", ":tabedit<CR>",          { noremap = true, silent = true })
-map("n", "<C-down>", ":tabclose<CR>",       { noremap = true, silent = true })
--- move tabs around
-map("n", "<S-left>", ":tabmove-1<CR>",      { noremap = true, silent = true })
-map("n", "<S-right>", ":tabmove+1<CR>",     { noremap = true, silent = true })
 
-map("n", "<Leader>w", "<C-w>",              { noremap = true })
--- move lines around
-map("n", "<C-j>", ":m+1<CR>",               { noremap = true, silent = true })
-map("n", "<C-k>", ":m-2<CR>",               { noremap = true, silent = true })
--- change vertical window size
-map("n", "<C-h>", ":vertical resize-2<CR>", { noremap = true, silent = true })
-map("n", "<C-l>", ":vertical resize+2<CR>", { noremap = true, silent = true })
--- auto comment in lua
-map("n", "<C-->", "0i--<ESC>",              { noremap = true })
--- adjust indentation of a line using < or >
-map("n", "<", "<<",                         { noremap = true })
-map("n", ">", ">>",                         { noremap = true })
--- if the line is empty then remap i to S
-map("n", "i", function()
+map('n', "<C-left>", ":tabprevious<CR>", { noremap = true, silent = true })
+map('n', "<C-right>", ":tabnext<CR>", { noremap = true, silent = true })
+map('n', "<C-up>", ":tabedit<CR>", { noremap = true, silent = true })
+map('n', "<C-down>", ":tabclose<CR>", { noremap = true, silent = true })
+map('n', "<S-left>", ":tabmove-1<CR>", { noremap = true, silent = true })
+map('n', "<S-right>", ":tabmove+1<CR>", { noremap = true, silent = true })
+
+-- leader remaps
+-- adhikmnopqrtuvxyz
+-- map('n', "<Leader>b", "", {}) -- TODO: buffer remaps
+-- map('n', "<Leader>c", "", {}) -- TODO: compile feature
+-- map('n', "<Leader>g", "", {}) -- TODO: git remaps
+map('n', "<Leader>j", function() vim.diagnostic.jump({ count = 1 }) end, { noremap = true })
+map('n', "<Leader>l", ":lua vim.diagnostic.setqflist()<CR>", { noremap = true, silent = true })
+-- map('n', "<Leader>r", "", {}) -- TODO: find and replace
+-- map('n', "<Leader>s", "", {}) -- TODO: go back to splash page
+map('n', "<Leader>w", "<C-w>", { noremap = true })
+
+map('n', "<C-h>", ":vertical resize-2<CR>", { noremap = true, silent = true })
+map('n', "<C-j>", ":m+1<CR>", { noremap = true, silent = true })
+map('n', "<C-k>", ":m-2<CR>", { noremap = true, silent = true })
+map('n', "<C-l>", ":vertical resize+2<CR>", { noremap = true, silent = true })
+map('n', "<C-->", "0i--<ESC>", { noremap = true })
+map('n', "<C-/>", "I//<ESC>", { noremap = true })
+map('n', "<", "<<", { noremap = true })
+map('n', ">", ">>", { noremap = true })
+map('n', 'i', function()
     local currentLine = vim.fn.getline('.')
     if currentLine == "" then
         return "S"
     else
-        return "i"
+        return 'i'
     end
 end, { noremap = true, expr = true })
 
--- <leader>h in visual mode to search for help of the highlighted area and <leader>/ to search the file
-map("v", "<Leader>h", "y:<C-u>help <C-r>0<CR>", { noremap = true })
-map("v", "<Leader>/", "y/<C-r>0<CR>",           { noremap = true })
+map('v', "<Leader>h", "y:<C-u>help <C-r>0<CR>", { noremap = true })
+map('v', "<Leader>/", "y/<C-r>0<CR>", { noremap = true })
+

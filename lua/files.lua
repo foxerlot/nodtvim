@@ -36,7 +36,7 @@ function M:set(buf, path)
 
     local newPath = ""
     if string.sub(path, 1, #home) == home then
-        newPath = "~" .. string.sub(path, #home+1)
+        newPath = "~" .. string.sub(path, #home + 1)
     else
         newPath = path
     end
@@ -45,7 +45,7 @@ function M:set(buf, path)
     vim.api.nvim_buf_set_lines(buf, 0, 0, false, { newPath })
 
     vim.api.nvim_buf_set_lines(buf, 1, 1, false, M:getFiles(newPath))
-    vim.api.nvim_win_set_cursor(0, {1, 0})
+    vim.api.nvim_win_set_cursor(0, { 1, 0 })
 
     -- TODO: add more remaps
     map('n', 'q', function()
@@ -90,7 +90,7 @@ function M:getFiles(path, sort)
     end
 
     local function applySort(tbl)
-        if sort == 0 then     -- alphabetical
+        if sort == 0 then -- alphabetical
             table.sort(tbl, function(a, b)
                 return a:lower() < b:lower()
             end)
@@ -158,16 +158,16 @@ function M:openFile(buf, path)
 end
 
 function M:preview(path)
-    local name    = vim.api.nvim_get_current_line():sub(5)
-    local lines   = vim.fn.readfile(path .. "/" .. name)
-    local height  = 30
-    local width   = 50
+    local name       = vim.api.nvim_get_current_line():sub(5)
+    local lines      = vim.fn.readfile(path .. "/" .. name)
+    local height     = 30
+    local width      = 50
 
     local winOptions = {
         relative  = "editor",
         height    = height,
         width     = width,
-        row       = vim.api.nvim_win_get_cursor(0)[1]-1,
+        row       = vim.api.nvim_win_get_cursor(0)[1] - 1,
         col       = screenSize + 1,
         style     = "",
         border    = "rounded",
@@ -186,7 +186,7 @@ function M:preview(path)
     local win = vim.api.nvim_open_win(buf, true, winOptions)
 
     if #lines > 15 then
-        vim.api.nvim_win_set_cursor(0, {15, 0})
+        vim.api.nvim_win_set_cursor(0, { 15, 0 })
     end
 
     vim.bo[buf].modifiable = false
@@ -194,7 +194,6 @@ function M:preview(path)
 
     map('n', 'q', ":q!<CR>", { buffer = buf, noremap = true, silent = true })
 end
-
 
 function M:expand(line, path)
     if string.sub(line, 1, 1) == "~" then
@@ -219,41 +218,41 @@ function M:returnLangs(path)
 
     ext = ext:sub(2):lower()
     local langs = {
-        c   = "",
-        h   = "",
-        cpp = "",
-        cc  = "",
-        cxx = "",
-        hpp = "",
-        cs  = "",
-        clj = "",
+        c      = "",
+        h      = "",
+        cpp    = "",
+        cc     = "",
+        cxx    = "",
+        hpp    = "",
+        cs     = "",
+        clj    = "",
         coffee = "",
-        dart = "",
-        ex   = "",
-        exs  = "",
-        erl  = "",
-        go   = "",
-        hs   = "",
-        java = "",
-        js   = "",
-        jsx  = "",
-        kt   = "",
-        lua  = "",
-        m    = "",
-        php  = "",
-        pl   = "",
-        py   = "",
-        rb   = "",
-        rs   = "",
-        scala = "",
-        swift = "",
-        ts   = "",
-        tsx  = "",
-        vue  = "",
-        r    = "",
-        sh   = "",
-        bash = "",
-        zsh  = "",
+        dart   = "",
+        ex     = "",
+        exs    = "",
+        erl    = "",
+        go     = "",
+        hs     = "",
+        java   = "",
+        js     = "",
+        jsx    = "",
+        kt     = "",
+        lua    = "",
+        m      = "",
+        php    = "",
+        pl     = "",
+        py     = "",
+        rb     = "",
+        rs     = "",
+        scala  = "",
+        swift  = "",
+        ts     = "",
+        tsx    = "",
+        vue    = "",
+        r      = "",
+        sh     = "",
+        bash   = "",
+        zsh    = "",
     }
 
     return langs[ext] or ""

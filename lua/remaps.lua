@@ -60,4 +60,3 @@ end, { noremap = true, expr = true })
 
 map('v', "<Leader>h", "y:<C-u>help <C-r>0<CR>", { noremap = true })
 map('v', "<Leader>/", "y/<C-r>0<CR>", { noremap = true })
-

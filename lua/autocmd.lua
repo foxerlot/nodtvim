@@ -26,7 +26,7 @@ vim.api.nvim_create_autocmd("InsertLeave", {
     callback = function()
         if vim.bo.buftype ~= "" then return end -- this for safety
         local clients = vim.lsp.get_clients({ bufnr = 0 })
-        if #clients == 0 then return end -- this for safety
+        if #clients == 0 then return end        -- this for safety
 
         for _, client in ipairs(clients) do
             if client.server_capabilities.documentFormattingProvider then

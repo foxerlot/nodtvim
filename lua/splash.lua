@@ -18,6 +18,11 @@ function M:setScreen()
     end
 
     local buf = vim.api.nvim_create_buf(false, true)
+    vim.bo[buf].buftype = "nofile"
+    vim.bo[buf].bufhidden = "wipe"
+    vim.bo[buf].swapfile = false
+    vim.bo[buf].filetype = "splash"
+
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
     vim.api.nvim_buf_set_lines(buf, 16, 21, false, last5)
 
@@ -29,12 +34,12 @@ function M:setScreen()
 
     map("n", "n", ":edit ", { buffer = buf, noremap = true }) -- TODO: add a popup window that takes input and edits that file
 
-    map("n", "f", "", { buffer = buf, noremap = true, silent = true }) -- TODO: add fuzzy finder for files
+    map("n", "f", "", { buffer = buf, noremap = true, silent = true }) -- TODO: add finder for files
 
     map("n", "u", ":PlugUpdate<CR>", { buffer = buf, noremap = true, silent = true })
 
     map("n", "e", function()
-        require('files').open()
+        require('files').open(nil)
     end, { buffer = buf, noremap = true })
 
     map("n", "1", function() M:addoldfiles(1) end, { buffer = buf, noremap = true })
@@ -46,7 +51,6 @@ end
 
 function M:addoldfiles(n)
     vim.cmd("edit " .. oldfiles[n])
-    vim.api.nvim_buf_delete(2, { force = true })
 end
 
 return M

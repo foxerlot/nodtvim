@@ -31,7 +31,6 @@ map('n', "<S-left>", ":tabmove-1<CR>", { noremap = true, silent = true })
 map('n', "<S-right>", ":tabmove+1<CR>", { noremap = true, silent = true })
 
 -- leader remaps
--- adhikmnopqrtuvxyz
 -- map('n', "<Leader>b", "", {}) -- TODO: buffer remaps
 -- map('n', "<Leader>c", "", {}) -- TODO: compile feature
 -- map('n', "<Leader>g", "", {}) -- TODO: git remaps

@@ -25,3 +25,15 @@ A simple, fast file explorer written directly for NodtVim.
 |     `q` | Quit the file explorer               |
 |     `p` | Preview the selected file in a popup |
 | `Enter` | Open the selected file               |
+
+### 🔎 Built-in user-interface for searching
+
+Straight-forward ui for searching, just press `<Leader>f` to open it and type in what you want to search.
+
+**Keybindings inside the explorer:**
+
+|     Key | Action                               |
+| ------: | ------------------------------------ |
+|`CTRL-C` | Stop searching                       |
+| `Enter` | Switch from search to results        |
+| `Enter` | *In results* Open selected file      |

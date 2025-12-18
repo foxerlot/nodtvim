@@ -10,8 +10,8 @@ function M:open()
         relative  = "editor",
         height    = searchHeight,
         width     = searchWidth,
-        row       = math.floor((vim.api.nvim_win_get_height(0)-resultHeight-5)/2),
-        col       = math.floor((vim.api.nvim_win_get_width(0) - searchWidth)/2),
+        row       = math.floor((vim.api.nvim_win_get_height(0) - resultHeight - 5) / 2),
+        col       = math.floor((vim.api.nvim_win_get_width(0) - searchWidth) / 2),
         style     = "minimal",
         border    = "rounded",
         focusable = true,
@@ -22,8 +22,8 @@ function M:open()
         relative  = "editor",
         height    = resultHeight,
         width     = resultWidth,
-        row       = math.floor((vim.api.nvim_win_get_height(0)-resultHeight)/2),
-        col       = math.floor((vim.api.nvim_win_get_width(0) - resultWidth)/2),
+        row       = math.floor((vim.api.nvim_win_get_height(0) - resultHeight) / 2),
+        col       = math.floor((vim.api.nvim_win_get_width(0) - resultWidth) / 2),
         style     = "minimal",
         border    = "rounded",
         focusable = true,
@@ -35,7 +35,7 @@ function M:open()
     local searchBuf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(searchBuf, 0, -1, false, { ">" })
     vim.bo[searchBuf].buftype = "nofile"
---    vim.bo[searchBuf].bufhidden = "wipe" -- TODO: when done with main search functionality see if you can get this working
+    --    vim.bo[searchBuf].bufhidden = "wipe" -- TODO: when done with main search functionality see if you can get this working
     vim.bo[searchBuf].swapfile = false
     vim.bo[searchBuf].filetype = "search"
     vim.b[searchBuf].is_search_buf = true
@@ -50,13 +50,13 @@ function M:open()
     local searchWin = vim.api.nvim_open_win(searchBuf, true, searchOpt)
     vim.fn.feedkeys('a', 'n')
 
-    map({'i', 'n'}, "<C-c>", function()
+    map({ 'i', 'n' }, "<C-c>", function()
         vim.api.nvim_win_close(resultWin, true)
         vim.api.nvim_win_close(searchWin, true)
         vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<ESC>", true, false, true), 'n')
     end, { buffer = searchBuf, noremap = true, silent = true }) -- CTRL-C to exit
 
-    map({'i', 'n'}, "<C-c>", function()
+    map({ 'i', 'n' }, "<C-c>", function()
         vim.api.nvim_win_close(resultWin, true)
         vim.api.nvim_win_close(searchWin, true)
         vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<ESC>", true, false, true), 'n')
@@ -67,7 +67,7 @@ function M:open()
         return "<BS>"
     end, { buffer = searchBuf, expr = true })
 
-    map({'i', 'n'}, "<CR>", function()
+    map({ 'i', 'n' }, "<CR>", function()
         vim.api.nvim_set_current_win(resultWin)
         vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<ESC>", true, false, true), 'n')
     end, { buffer = searchBuf, noremap = true })
@@ -78,13 +78,14 @@ function M:open()
     end, { buffer = resultBuf, noremap = true })
 
     map('n', "<CR>", function()
-        local linenr = string.sub(vim.api.nvim_get_current_line(), 0, string.find(vim.api.nvim_get_current_line(), ':', 1, true))
+        local linenr = string.sub(vim.api.nvim_get_current_line(), 0,
+            string.find(vim.api.nvim_get_current_line(), ':', 1, true))
         vim.api.nvim_win_close(resultWin, true)
         vim.api.nvim_win_close(searchWin, true)
         vim.fn.feedkeys(':' .. linenr .. "\n")
     end, { buffer = resultBuf, noremap = true, silent = true })
 
-    vim.api.nvim_create_autocmd({"TextChangedI", "TextChanged"}, {
+    vim.api.nvim_create_autocmd({ "TextChangedI", "TextChanged" }, {
         buffer = searchBuf,
         callback = function(ev)
             if vim.b[ev.buf].is_search_buf then

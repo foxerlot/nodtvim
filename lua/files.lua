@@ -1,20 +1,31 @@
 local M = {}
 local map = vim.keymap.set
 local screenSize = nil
+local fullScreen = false
 
 function M:open(size)
-    screenSize = size
-    if size ~= nil then
-        vim.cmd(size .. "vsplit")
+    if not size then
+        screenSize = vim.api.nvim_win_get_width(0)
+        fullScreen = true
+    else
+        screenSize = size
     end
+    if size then vim.cmd(size .. "vsplit") end
 
     local buf = vim.api.nvim_create_buf(false, true)
     vim.b[buf].isSpecial = true
+    vim.bo[buf].buftype = "nofile"
+    vim.bo[buf].bufhidden = "wipe"
+    vim.bo[buf].swapfile = false
+
     local win = vim.api.nvim_get_current_win()
     vim.api.nvim_win_set_buf(win, buf)
 
+    vim.wo.number = false
+    vim.wo.relativenumber = false
+    vim.wo.signcolumn = "no"
+
     M:set(buf)
-    vim.cmd("set nonumber norelativenumber")
 end
 
 function M:set(buf, path)
@@ -37,19 +48,19 @@ function M:set(buf, path)
     vim.api.nvim_win_set_cursor(0, {1, 0})
 
     -- TODO: add more remaps
-    map("n", "q", function()
-        if #vim.api.nvim_list_bufs() > 1 then
-            vim.api.nvim_buf_delete(buf, {force = true})
+    map('n', 'q', function()
+        if #vim.api.nvim_list_bufs() > 1 and #vim.api.nvim_list_wins() > 1 then
+            vim.api.nvim_win_close(0, true)
         else
             vim.cmd("quit")
         end
     end, { buffer = buf, noremap = true, silent = true })
 
-    map("n", "<CR>", function()
+    map('n', "<CR>", function()
         M:openFile(buf, path)
     end, { buffer = buf, noremap = true, silent = true })
 
-    map("n", "p", function()
+    map('n', 'p', function()
         M:preview(path)
     end, { buffer = buf, noremap = true })
 
@@ -59,7 +70,7 @@ end
 function M:getFiles(path, sort)
     path = M:expand(path, vim.fn.fnamemodify(path, ":h"))
     sort = sort or 0
-    local filesInPath = vim.split(vim.fn.system("ls -a " .. path), "\n", { trimempty = true }) -- use vim.fn.system instead of vim.system because vim.system is gay (idk how to use it)
+    local filesInPath = vim.split(vim.fn.system("ls -a " .. path), "\n", { trimempty = true })
     for i = #filesInPath, 1, -1 do
         if filesInPath[i] == "." or filesInPath[i] == ".." then
             table.remove(filesInPath, i)
@@ -122,7 +133,6 @@ function M:openFile(buf, path)
     if not vim.uv.fs_stat(line) then return end
     local type = vim.uv.fs_stat(line).type
 
-
     if type == "directory" then
         line = vim.api.nvim_win_get_cursor(0)[1] == 1 and vim.fs.dirname(line) or line
         M:set(buf, line)
@@ -138,11 +148,13 @@ function M:openFile(buf, path)
         end
         if vim.api.nvim_buf_get_name(0) ~= "" and not vim.b[vim.api.nvim_get_current_buf()].isSpecial == true then
             vim.cmd("vsplit")
+        else
+            vim.wo.number = true
+            vim.wo.relativenumber = true
+            vim.wo.signcolumn = "yes"
         end
         vim.cmd("edit " .. vim.fn.fnameescape(targetPath))
     end
-
-    vim.bo[buf].modifiable = false
 end
 
 function M:preview(path)
@@ -164,6 +176,10 @@ function M:preview(path)
         title_pos = "center",
     }
 
+    if fullScreen then
+        winOptions["col"] = math.floor((screenSize / 2) - width)
+    end
+
     name = M:expand(name, path)
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
@@ -176,7 +192,7 @@ function M:preview(path)
     vim.bo[buf].modifiable = false
     vim.wo[win].scrolloff  = 100
 
-    map("n", "q", ":q!<CR>", { buffer = buf, noremap = true, silent = true })
+    map('n', 'q', ":q!<CR>", { buffer = buf, noremap = true, silent = true })
 end
 
 
@@ -195,8 +211,6 @@ function M:expand(line, path)
     if vim.uv.fs_stat(fullPath) ~= nil then
         return fullPath
     end
-
-    return nil
 end
 
 function M:returnLangs(path)

@@ -32,7 +32,7 @@ function M:setScreen()
 
     map("n", "q", ":q<CR>", { buffer = buf, noremap = true, silent = true })
 
-    map("n", "n", ":edit ", { buffer = buf, noremap = true }) -- TODO: add a popup window that takes input and edits that file
+    map("n", "n", ":edit ", { buffer = buf, noremap = true })          -- TODO: add a popup window that takes input and edits that file
 
     map("n", "f", "", { buffer = buf, noremap = true, silent = true }) -- TODO: add finder for files
 

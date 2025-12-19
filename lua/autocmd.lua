@@ -1,16 +1,3 @@
--- splash-screen
-vim.api.nvim_create_autocmd("UIEnter", {
-    callback = function()
-        if vim.fn.argv(0) == "" then
-            require('splash').setScreen(nil)
-        elseif vim.fn.argv(0) == "." then -- TODO: make this open a directory if argv == directory
-            local bufnr = vim.api.nvim_get_current_buf()
-            require('files').open(nil)
-            vim.api.nvim_buf_delete(bufnr, { force = true })
-        end
-    end
-})
-
 -- autocomplete window automatically shows up       DON'T PUT A LOT OF CODE IN HERE!!!
 vim.api.nvim_create_autocmd("InsertCharPre", {
     callback = function()

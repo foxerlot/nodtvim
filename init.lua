@@ -1,16 +1,10 @@
--- HARD disable Tree-sitter (must be first)
-vim.env.NVIM_TS_DISABLE = "1"
-vim.g.loaded_nvim_treesitter = 1
-vim.g.loaded_nvim_treesitter_plugin = 1
-vim.cmd("syntax on")
-
 -- disable netrw
 vim.g.loaded_netrw   = 1
 vim.g.loaded_netrwPlugin = 1
-
 vim.g.mapleader      = " "
 vim.g.maplocalleader = " "
 
+vim.cmd("syntax on")
 vim.o.termguicolors  = true
 vim.o.number         = true
 vim.o.relativenumber = true
@@ -72,6 +66,7 @@ vim.cmd([[
 
     call plug#end()
 ]])
+
 
 -- colorscheme settings
 vim.cmd [[ colorscheme catppuccin ]]

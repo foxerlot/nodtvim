@@ -1,5 +1,10 @@
+-- disable netrw and treesitter
+-- (perhaps can implement them later)
 vim.g.loaded_netrw   = 1
 vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_nvim_treesitter = 1
+vim.g.loaded_nvim_treesitter_plugin = 1
+
 vim.g.mapleader      = " "
 vim.g.maplocalleader = " "
 vim.cmd("syntax on")

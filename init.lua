@@ -1,3 +1,14 @@
+-- plugin settings
+vim.cmd([[
+    call plug#begin()
+
+    Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+    Plug 'neovim/nvim-lspconfig'
+
+    call plug#end()
+]])
+vim.cmd [[ colorscheme catppuccin ]]
+
 -- disable netrw
 vim.g.loaded_netrw   = 1
 vim.g.loaded_netrwPlugin = 1
@@ -57,19 +68,12 @@ vim.keymap.set('n', "<Leader>f", function()
     require("find").open()
 end, { noremap = true })
 
--- plugin settings
-vim.cmd([[
-    call plug#begin()
-
-    Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
-    Plug 'neovim/nvim-lspconfig'
-
-    call plug#end()
-]])
+vim.keymap.set("i", "<C-e>", function()
+  require("emmet").expand_abbreviation()
+end, { noremap = true, silent = true })
 
 
 -- colorscheme settings
-vim.cmd [[ colorscheme catppuccin ]]
 vim.api.nvim_set_hl(0, "LineNr",       { fg = "#c79978", bg = "NONE" })
 vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#c79978", bg = "NONE" })
 

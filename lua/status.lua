@@ -74,26 +74,40 @@ function _G.languageIcon()
     return langs[f] or ""
 end
 
---    local levels = vim.diagnostic.severity
---    local errors = #vim.diagnostic.get(0, {severity = levels.ERROR})
---    if errors > 0 then
---        return ' ✘ '
---    end
---
---    local warnings = #vim.diagnostic.get(0, {severity = levels.WARN})
---    if warnings > 0 then
---        return ' ▲ '
---    end
+local levels = vim.diagnostic.severity
+function _G.diagnosticStatus()
+    local bufnr = 0
+    local errors = #vim.diagnostic.get(bufnr, { severity = levels.ERROR })
+    local warns  = #vim.diagnostic.get(bufnr, { severity = levels.WARN })
+    local parts = {}
+
+    if errors > 0 then table.insert(parts, "✘ " .. errors) end
+    if warns > 0 then table.insert(parts, "▲ " .. warns) end
+    return table.concat(parts, " ")
+end
+function _G.gitBranch()
+    local git_dir = vim.fn.finddir(".git", ".;")
+    if git_dir == "" then return "" end
+
+    local head = vim.fn.systemlist("git branch --show-current")[1]
+    if not head or head == "" then return "" end
+    return " " .. head
+end
 
 vim.api.nvim_set_hl(0, "modeGroup", { fg = "#000000", bg = "#ff8080", bold = true })
 vim.api.nvim_set_hl(0, "tri1", { fg = "#ff8080", bg = "#8080ff" })
 vim.api.nvim_set_hl(0, "fileGroup", { fg = "#000000", bg = "#8080ff", bold = true })
-vim.api.nvim_set_hl(0, "tri2", { fg = "#8080ff", bg = "#80ff80" })
+vim.api.nvim_set_hl(0, "tri2", { fg = "#8080ff", bg = "#80ffff" })
 vim.api.nvim_set_hl(0, "midGroup", { fg = "#000000", bg = "#80ff80", bold = true })
-vim.api.nvim_set_hl(0, "tri3", { fg = "#ffff80", bg = "#80ff80" })
+vim.api.nvim_set_hl(0, "tri3", { fg = "#ffff80", bg = "#ffcc80" })
 vim.api.nvim_set_hl(0, "rulerGroup", { fg = "#000000", bg = "#ffff80", bold = true })
 vim.api.nvim_set_hl(0, "tri4", { fg = "#80ffff", bg = "#ffff80" })
 vim.api.nvim_set_hl(0, "percentGroup", { fg = "#000000", bg = "#80ffff", bold = true })
+vim.api.nvim_set_hl(0, "diagGroup",   { fg = "#000000", bg = "#ffcc80", bold = true })
+vim.api.nvim_set_hl(0, "triDiag",     { fg = "#ffcc80", bg = "#80ff80" })
+vim.api.nvim_set_hl(0, "gitGroup",    { fg = "#000000", bg = "#80ffff", bold = true })
+vim.api.nvim_set_hl(0, "triGit",      { fg = "#80ffff", bg = "#80ff80" })
+
 
 vim.o.laststatus = 2
 vim.api.nvim_create_autocmd({ "BufEnter", "WinResized" }, {
@@ -105,11 +119,23 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinResized" }, {
         local width = vim.api.nvim_win_get_width(0)
 
         if width >= 50 then
-            vim.api.nvim_buf_set_option(args.buf, 'statusline',
-                "%#modeGroup#%{v:lua.statusLineMode()}%*%#tri1#%*%#fileGroup# %{v:lua.languageIcon()} %f %*%#tri2#%*%#midGroup# %m%h%r%w%=%#tri3#%*%#rulerGroup# %l : %c %*%#tri4#%*%#percentGroup# %p%%/%L %*")
+            local wide_statusline =
+                "%#modeGroup#%{v:lua.statusLineMode()}%*" .. -- mode
+                "%#tri1#%*" ..
+                "%#fileGroup# %{v:lua.languageIcon()} %f %m %*" .. -- filename
+                "%#tri2#%*" ..
+                "%#gitGroup# %{v:lua.gitBranch()} %*" .. -- git branch
+                "%#triGit#%*" ..
+                "%#midGroup# %h%r%w%=" .. -- filler
+                "%#triDiag#%*" ..
+                "%#diagGroup# %{v:lua.diagnosticStatus()} %*" .. -- diagnostics
+                "%#tri3#%*" ..
+                "%#rulerGroup# %l : %c %*" .. -- line number
+                "%#tri4#%*" ..
+                "%#percentGroup# %p%%/%L %*" -- file lines
+            vim.api.nvim_buf_set_option(args.buf, 'statusline', wide_statusline)
         else
-            vim.api.nvim_buf_set_option(args.buf, 'statusline',
-                "%#fileGroup# %{v:lua.languageIcon()} %f %*%#tri2#%*%#midGroup# %m%h%r%w%=%*")
+            vim.api.nvim_buf_set_option(args.buf, 'statusline', "%#fileGroup# %{v:lua.languageIcon()} %f %*%#tri2#%*%#midGroup# %m%h%r%w%=%*")
         end
     end
 })
@@ -125,14 +151,11 @@ function _G.tabLineSettings()
     local tabCount = vim.fn.tabpagenr("$") -- (last) tab page number
 
     for i = 1, tabCount do
-        local bufNumber = vim.fn.tabpagebuflist(i)
-        [vim.fn.tabpagewinnr(i)] -- number of buffer displayed in active window
+        local bufNumber = vim.fn.tabpagebuflist(i)[vim.fn.tabpagewinnr(i)] -- number of buffer displayed in active window
         local bufName = vim.fn.bufname(bufNumber) -- name of buffer displayed in active window
-        local icon = langs[vim.api.nvim_buf_get_option(bufNumber, "filetype")] or
-        "" -- sets icon to language logo
+        local icon = langs[vim.api.nvim_buf_get_option(bufNumber, "filetype")] or "" -- sets icon to language logo
         local modifiedFlag = vim.api.nvim_buf_get_option(bufNumber, "modified") and "  " or "   " -- sets modified flag
-        bufName = bufName == "" and "[No Name]" or
-        bufName -- if bufName is empty then make it = "[No Name]"
+        bufName = bufName == "" and "[No Name]" or bufName -- if bufName is empty then make it = "[No Name]"
 
         if i == currentTab then
             t = t .. "%#activeGroup#"

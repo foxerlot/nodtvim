@@ -1,5 +1,5 @@
 vim.lsp.config("lua_ls", {
-    cmd = { "lua-language-server" },
+    cmd = { "opt/lua-language-server/bin/lua-language-server" },
     on_init = function(client)
         if client.workspace_folders then
             local path = client.workspace_folders[1].name

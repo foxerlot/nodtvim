@@ -33,7 +33,6 @@ map('n', "<S-right>", ":tabmove+1<CR>", { noremap = true, silent = true })
 -- leader remaps
 -- map('n', "<Leader>b", "", {}) -- TODO: buffer remaps
 -- map('n', "<Leader>c", "", {}) -- TODO: compile feature
--- map('n', "<Leader>g", "", {}) -- TODO: git remaps
 map('n', "<Leader>j", function() vim.diagnostic.jump({ count = 1 }) end, { noremap = true })
 map('n', "<Leader>l", ":lua vim.diagnostic.setqflist()<CR>", { noremap = true, silent = true })
 -- map('n', "<Leader>r", "", {}) -- TODO: find and replace

@@ -27,3 +27,7 @@ vim.api.nvim_create_autocmd("InsertLeave", {
         end
     end,
 })
+
+vim.api.nvim_create_user_command("Search", function()
+  require("search").prompt_search()
+end, {})

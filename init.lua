@@ -10,10 +10,10 @@ vim.cmd([[
 vim.cmd [[ colorscheme catppuccin ]]
 
 -- disable netrw
-vim.g.loaded_netrw   = 1
+vim.g.loaded_netrw       = 1
 vim.g.loaded_netrwPlugin = 1
-vim.g.mapleader      = " "
-vim.g.maplocalleader = " "
+vim.g.mapleader          = " "
+vim.g.maplocalleader     = " "
 
 vim.cmd("syntax on")
 vim.o.termguicolors  = true
@@ -49,9 +49,9 @@ vim.o.mousehide      = true
 vim.opt.completeopt  = { "menu", "menuone", "noselect" }
 
 vim.diagnostic.config({
-    virtual_text     = true,
-    signs            = true,
-    underline        = true,
+    virtual_text = true,
+    signs        = true,
+    underline    = true,
 })
 
 require("status")
@@ -65,15 +65,14 @@ vim.keymap.set("n", "<Leader>e", function()
 end, { noremap = true })
 
 vim.keymap.set('n', "<Leader>f", function()
-    require("find").open()
+    require("find").open(nil)
 end, { noremap = true })
 
 vim.keymap.set("i", "<C-e>", function()
-  require("emmet").expand_abbreviation()
+    require("emmet").expand_abbreviation()
 end, { noremap = true, silent = true })
 
 
 -- colorscheme settings
-vim.api.nvim_set_hl(0, "LineNr",       { fg = "#c79978", bg = "NONE" })
+vim.api.nvim_set_hl(0, "LineNr", { fg = "#c79978", bg = "NONE" })
 vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#c79978", bg = "NONE" })
-

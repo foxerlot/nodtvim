@@ -39,11 +39,17 @@ map('n', "<Leader>l", ":lua vim.diagnostic.setqflist()<CR>", { noremap = true, s
 -- map('n', "<Leader>r", "", {}) -- TODO: find and replace
 -- map('n', "<Leader>s", "", {}) -- TODO: go back to splash page
 map('n', "<Leader>w", "<C-w>", { noremap = true })
+map('n', "<Leader>v", "goVG", { noremap = true })
 
 map('n', "<C-h>", ":vertical resize-2<CR>", { noremap = true, silent = true })
 map('n', "<C-j>", ":m+1<CR>", { noremap = true, silent = true })
 map('n', "<C-k>", ":m-2<CR>", { noremap = true, silent = true })
 map('n', "<C-l>", ":vertical resize+2<CR>", { noremap = true, silent = true })
+-- TODO: move around windows
+--map('n', "<M-h>", "", { noremap = true, silent = true })
+--map('n', "<M-j>", "", { noremap = true, silent = true })
+--map('n', "<M-k>", "", { noremap = true, silent = true })
+--map('n', "<M-l>", "", { noremap = true, silent = true })
 map('n', "<C-->", "0i--<ESC>", { noremap = true })
 map('n', "<C-/>", "I//<ESC>", { noremap = true })
 map('n', "<", "<<", { noremap = true })

@@ -56,13 +56,12 @@ function M:set(buf, path)
         end
     end, { buffer = buf, noremap = true, silent = true })
 
-    map('n', "<CR>", function()
-        M:openFile(buf, path)
-    end, { buffer = buf, noremap = true, silent = true })
-
-    map('n', 'p', function()
-        M:preview(path)
-    end, { buffer = buf, noremap = true })
+    map('n', "<CR>", function() M:openFile(buf, path) end, { buffer = buf, noremap = true, silent = true })
+    map('n', 'p', function() M:preview(path) end, { buffer = buf, noremap = true })
+    map('n', 'd', function() M:delete(path) end, { buffer = buf, noremap = true, silent = true })
+    map('n', 'r', function() M:rename(path) end, { buffer = buf, noremap = true, silent = true })
+    map('n', 'n', function() M:newFile(path) end, { buffer = buf, noremap = true, silent = true })
+    map('n', 'N', function() M:newDirectory(path) end, { buffer = buf, noremap = true, silent = true })
 
     vim.bo[buf].modifiable = false
 end
@@ -193,6 +192,100 @@ function M:preview(path)
     vim.wo[win].scrolloff  = 100
 
     map('n', 'q', ":q!<CR>", { buffer = buf, noremap = true, silent = true })
+end
+
+function M:delete(path)
+    local line = vim.api.nvim_get_current_line()
+    line = line:sub(5) -- remove icon
+    local target = M:expand(line, path)
+    if not target then return end
+
+    local stat = vim.uv.fs_stat(target)
+    if not stat then return end
+
+    local confirm = vim.fn.confirm(
+        "Delete " .. target .. "?",
+        "&Yes\n&No",
+        2
+    )
+    if confirm ~= 1 then return end
+
+    if stat.type == "directory" then
+        vim.fn.system({ "rm", "-rf", target })
+    else
+        vim.fn.delete(target)
+    end
+    M:set(vim.api.nvim_get_current_buf(), path)
+end
+
+function M:rename(path)
+    local line = vim.api.nvim_get_current_line()
+    line = line:sub(5) -- remove icon
+    local target = M:expand(line, path)
+    if not target then return end
+
+    local stat = vim.uv.fs_stat(target)
+    if not stat then return end
+
+    local oldName = vim.fn.fnamemodify(target, ":t")
+    local dir     = vim.fn.fnamemodify(target, ":h")
+    local newName = vim.fn.input("Rename to: ", oldName)
+    if newName == "" or newName == oldName then return end
+
+    local newPath = dir .. "/" .. newName
+    if vim.uv.fs_stat(newPath) then
+        vim.notify("File already exists", vim.log.levels.ERROR)
+        return
+    end
+
+    local ok, err = vim.uv.fs_rename(target, newPath)
+    if not ok then
+        vim.notify(err, vim.log.levels.ERROR)
+        return
+    end
+    M:set(vim.api.nvim_get_current_buf(), path)
+end
+
+
+function M:newFile(path)
+    local name = vim.fn.input("New file: ")
+    if name == "" then return end
+
+    local fullPath = path .. "/" .. name
+    fullPath = fullPath:gsub("//+", "/")
+
+    if vim.uv.fs_stat(fullPath) then
+        vim.notify("File already exists", vim.log.levels.ERROR)
+        return
+    end
+
+    local fd = vim.uv.fs_open(fullPath, "w", 420) -- 0644
+    if not fd then
+        vim.notify("Failed to create file", vim.log.levels.ERROR)
+        return
+    end
+    vim.uv.fs_close(fd)
+    M:set(vim.api.nvim_get_current_buf(), path)
+end
+
+function M:newDirectory(path)
+    local name = vim.fn.input("New directory: ")
+    if name == "" then return end
+
+    local fullPath = path .. "/" .. name
+    fullPath = fullPath:gsub("//+", "/")
+
+    if vim.uv.fs_stat(fullPath) then
+        vim.notify("Directory already exists", vim.log.levels.ERROR)
+        return
+    end
+
+    local ok, err = vim.uv.fs_mkdir(fullPath, 493) -- 0755
+    if not ok then
+        vim.notify(err, vim.log.levels.ERROR)
+        return
+    end
+    M:set(vim.api.nvim_get_current_buf(), path)
 end
 
 function M:expand(line, path)

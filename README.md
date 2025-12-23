@@ -11,7 +11,7 @@ Your neovim config directory should look something like this:
 ```bash
 ~/.config/nvim
     init.lua
-    src/
+    lua/
 ```
 
 ### 📁 Built‑in File Explorer

@@ -10,11 +10,12 @@ vim.cmd([[
 vim.cmd [[ colorscheme catppuccin ]]
 
 -- disable netrw
-vim.g.loaded_netrw       = 1
-vim.g.loaded_netrwPlugin = 1
-vim.g.mapleader          = " "
-vim.g.maplocalleader     = " "
+-- vim.g.loaded_netrw       = 1
+-- vim.g.loaded_netrwPlugin = 1
+vim.g.mapleader      = " "
+vim.g.maplocalleader = " "
 
+vim.cmd("mapclear")
 vim.cmd("syntax on")
 vim.o.termguicolors  = true
 vim.o.number         = true
@@ -41,7 +42,7 @@ vim.o.sidescrolloff  = 3
 vim.o.scrolloff      = 3
 vim.o.visualbell     = true
 vim.o.numberwidth    = 4
-vim.opt.fillchars    = { eob = " " }
+vim.opt.fillchars    = { vert = "│", eob = " " }
 vim.o.errorbells     = false
 vim.o.icon           = true
 vim.o.iconstring     = "Neovim"
@@ -58,19 +59,13 @@ require("status")
 require("remaps")
 require("autocmd")
 require("lsp.lua_ls")
-vim.lsp.enable("lua_ls")
+require("lsp.clangd")
+vim.lsp.enable({ "c_ls", "lua_ls" })
 
-vim.keymap.set("n", "<Leader>e", function()
-    require("files"):open(37)
-end, { noremap = true })
-
-vim.keymap.set('n', "<Leader>f", function()
-    require("find").open(nil)
-end, { noremap = true })
-
-vim.keymap.set("i", "<C-e>", function()
-    require("emmet").expand_abbreviation()
-end, { noremap = true, silent = true })
+vim.keymap.set('n', "<Leader>e", ":Ve<CR>", { noremap = true })
+--vim.keymap.set("n", "<Leader>e", function() require("files"):open(37) end, { noremap = true })
+--vim.keymap.set('n', "<Leader>f", function() require("find").open(nil) end, { noremap = true })
+--vim.keymap.set("i", "<C-e>", function() require("emmet").expand_abbreviation() end, { noremap = true, silent = true })
 
 
 -- colorscheme settings
